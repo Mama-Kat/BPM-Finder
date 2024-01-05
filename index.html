@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPM Finder</title>
+</head>
+<body>
+    <h1>BPM Finder</h1>
+    
+    <input type="file" accept="audio/*" id="audioFileInput">
+    <button onclick="calculateBPM()">Calculate BPM</button>
+
+    <p id="result"></p>
+
+    <script src="https://cdn.jsdelivr.net/npm/librosa@0.8.1/dist/librosa.min.js"></script>
+    <script>
+        function calculateBPM() {
+            const fileInput = document.getElementById('audioFileInput');
+            const resultElement = document.getElementById('result');
+
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please select an audio file.');
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const audioData = e.target.result;
+
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                audioContext.decodeAudioData(audioData, function(buffer) {
+                    const duration = buffer.duration;
+                    const bpm = calculateTempo(duration);
+                    resultElement.textContent = `The BPM of the audio file is: ${bpm}`;
+                });
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function calculateTempo(duration) {
+            // Your BPM calculation logic here
+            // For simplicity, this example just returns a constant value
+            return 120;
+        }
+    </script>
+</body>
+</html>
